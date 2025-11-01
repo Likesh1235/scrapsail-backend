@@ -1,0 +1,2 @@
+web: java -jar target/scrapsail-backend-0.0.1-SNAPSHOT.jar
+
