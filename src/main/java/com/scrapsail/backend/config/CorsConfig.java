@@ -35,8 +35,7 @@ public class CorsConfig {
         // Production - Vercel Domains (add your exact Vercel URL after deployment)
         "https://scrapsail-frontend.vercel.app",
         "https://scrapsail-frontend-git-main-likesh1235s-projects.vercel.app"
-        // Note: Add your exact Vercel URL here after deployment
-        // You can also use ALLOWED_ORIGINS environment variable for dynamic origins
+        // Note: After deployment, add your exact Vercel URL here if different
     );
 
     // Global CORS configuration for Spring MVC - applies to ALL endpoints
