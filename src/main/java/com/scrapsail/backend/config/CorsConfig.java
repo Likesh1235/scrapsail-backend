@@ -14,8 +14,9 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-    // Comprehensive list of allowed origins - covers all common development ports
+    // Comprehensive list of allowed origins - covers all common development ports and production domains
     public static final List<String> ALLOWED_ORIGINS = Arrays.asList(
+        // Local Development
         "http://localhost:3000",
         "https://localhost:3000",
         "http://localhost:3001",
@@ -30,7 +31,12 @@ public class CorsConfig {
         "http://127.0.0.1:3001",
         "http://127.0.0.1:3003",
         "http://127.0.0.1:3006",
-        "http://127.0.0.1:5173"
+        "http://127.0.0.1:5173",
+        // Production - Vercel Domains (add your exact Vercel URL after deployment)
+        "https://scrapsail-frontend.vercel.app",
+        "https://scrapsail-frontend-git-main-likesh1235s-projects.vercel.app"
+        // Note: Add your exact Vercel URL here after deployment
+        // You can also use ALLOWED_ORIGINS environment variable for dynamic origins
     );
 
     // Global CORS configuration for Spring MVC - applies to ALL endpoints
