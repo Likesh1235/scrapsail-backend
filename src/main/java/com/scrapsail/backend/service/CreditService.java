@@ -13,7 +13,6 @@ import com.scrapsail.backend.model.User;
 import com.scrapsail.backend.repository.CarbonCreditRepository;
 import com.scrapsail.backend.repository.WalletRepository;
 import com.scrapsail.backend.repository.UserRepository;
-import com.scrapsail.backend.service.LeaderboardService;
 
 @Service
 @Transactional
