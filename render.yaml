@@ -1,17 +1,20 @@
 services:
   - type: web
     name: scrapsail-backend
-    env: docker
+    runtime: java17
     plan: free
     region: singapore
-    buildCommand: "./mvnw clean package -DskipTests"
-    startCommand: "java -jar target/*.jar"
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/*.jar
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: MYSQL_URL
-        value: "jdbc:mysql://scrapsaildb-scrapsaildb.e.aivencloud.com:22902/defaultdb?sslMode=REQUIRED"
+        value: jdbc:mysql://scrapsaildb-scrapsaildb.e.aivencloud.com:22902/defaultdb?sslMode=REQUIRED
       - key: DB_USERNAME
-        value: "avnadmin"
+        value: avnadmin
       - key: DB_PASSWORD
         sync: false
+      - key: SERVER_PORT
+        value: 8080
+    branch: main
