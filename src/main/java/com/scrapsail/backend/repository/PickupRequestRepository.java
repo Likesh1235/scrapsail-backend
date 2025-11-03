@@ -13,6 +13,6 @@ public interface PickupRequestRepository extends JpaRepository<PickupRequest, Lo
     List<PickupRequest> findByUser(User user);
     List<PickupRequest> findByUserId(Long userId);
     List<PickupRequest> findByStatus(String status);
-    Optional<PickupRequest> findById(Long id);
+    // findById is already provided by JpaRepository<PickupRequest, Long>
 }
 
