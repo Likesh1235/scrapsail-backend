@@ -1,7 +1,6 @@
 services:
   - type: web
     name: scrapsail-backend
-    env: java
     plan: free
     region: singapore
     buildCommand: chmod +x ./mvnw && ./mvnw clean package -DskipTests
