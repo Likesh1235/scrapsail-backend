@@ -2,11 +2,10 @@ services:
   - type: web
     name: scrapsail-backend
     env: java
-    runtime: java17
     plan: free
     region: singapore
-    buildCommand: "./mvnw clean package -DskipTests"
-    startCommand: "java -jar target/*.jar"
+    buildCommand: chmod +x ./mvnw && ./mvnw clean package -DskipTests
+    startCommand: java -jar target/*.jar
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
