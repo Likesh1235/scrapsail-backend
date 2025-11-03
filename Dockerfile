@@ -18,9 +18,10 @@ COPY src/ ./src/
 # Build the application
 RUN ./mvnw clean package -DskipTests
 
-# Expose port
+# Expose port (Render will set PORT env var)
 EXPOSE 8080
 
+# Environment variables are passed from Render automatically
 # Run the application
-CMD ["java", "-jar", "target/scrapsail-backend-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "target/scrapsail-backend-0.0.1-SNAPSHOT.jar"]
 
