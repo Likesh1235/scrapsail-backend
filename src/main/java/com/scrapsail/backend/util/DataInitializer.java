@@ -26,8 +26,10 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // Don't block startup if repositories are not available (e.g., DB not connected)
         if (userRepository == null || passwordEncoder == null || walletRepository == null) {
+            System.out.println("⚠️ DataInitializer: Skipping initialization - DB not available");
             return; // Skip initialization if DB not available
-        } {
+        }
+        
         System.out.println("🔄 DataInitializer: Starting user initialization...");
         
         try {
@@ -96,9 +98,10 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("📊 Total users in database: " + totalUsers);
             
         } catch (Exception e) {
-            System.err.println("❌ ERROR in DataInitializer: " + e.getMessage());
+            System.err.println("⚠️ WARNING in DataInitializer: " + e.getMessage());
             e.printStackTrace();
-            throw e; // Re-throw to see the error
+            // Don't throw - just log the error so app can start
+            // This allows health checks to work even if DB initialization fails
         }
     }
 
