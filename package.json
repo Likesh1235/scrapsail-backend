@@ -1,0 +1,12 @@
+{
+  "name": "scrapsail-backend-java",
+  "version": "1.0.0",
+  "description": "Spring Boot Java Application - Do not use Node.js",
+  "engines": {
+    "node": "DO_NOT_USE"
+  },
+  "scripts": {
+    "start": "echo 'This is a Java application. Use java -jar target/*.jar'"
+  }
+}
+
