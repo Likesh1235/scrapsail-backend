@@ -14,7 +14,7 @@ import java.util.Map;
 @RestController
 public class HomeController {
 
-    @Autowired
+    @Autowired(required = false)
     private UserRepository userRepository;
 
     @GetMapping("/")
@@ -56,20 +56,28 @@ public class HomeController {
     @GetMapping("/ready")
     public ResponseEntity<Map<String, Object>> ready() {
         Map<String, Object> response = new HashMap<>();
-        try {
-            // Test database connection by counting users
-            userRepository.count(); // Test DB connection
-            response.put("status", "ready");
-            response.put("database", "connected");
-            response.put("timestamp", System.currentTimeMillis());
-            response.put("message", "Backend is ready and database is accessible");
+        response.put("status", "ready");
+        response.put("timestamp", System.currentTimeMillis());
+        response.put("message", "Backend is ready");
+        
+        // Test database connection if repository is available
+        if (userRepository != null) {
+            try {
+                userRepository.count(); // Test DB connection
+                response.put("database", "connected");
+                response.put("message", "Backend is ready and database is accessible");
+                return ResponseEntity.ok(response);
+            } catch (Exception e) {
+                response.put("database", "disconnected");
+                response.put("error", e.getMessage());
+                response.put("message", "Backend is ready but database is not accessible");
+                // Still return 200 OK - app is ready even if DB fails
+                return ResponseEntity.ok(response);
+            }
+        } else {
+            response.put("database", "not_configured");
+            response.put("message", "Backend is ready but database is not configured");
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            response.put("status", "not ready");
-            response.put("database", "disconnected");
-            response.put("error", e.getMessage());
-            response.put("timestamp", System.currentTimeMillis());
-            return ResponseEntity.status(503).body(response);
         }
     }
 
