@@ -78,8 +78,8 @@ Add these variables (if not already set):
 | `DB_PASSWORD` | `AVNS_q3bA1ATbxyymPpRXPIY` |
 | `PORT` | `8080` |
 | `FRONTEND_URL` | `https://your-frontend-url.vercel.app` (optional) |
-| `EMAIL_USERNAME` | Your email (if using email features) |
-| `EMAIL_PASSWORD` | Your email password (if using email features) |
+| `EMAIL_USERNAME` | `likeshkanna74@gmail.com` |
+| `EMAIL_PASSWORD` | `rvou eevk bdwt iizl` |
 
 ### Step 3: Deploy on Render
 
