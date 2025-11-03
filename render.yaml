@@ -3,19 +3,14 @@ services:
     name: scrapsail-backend
     env: java
     plan: free
-    region: singapore
 
-    buildCommand: "./mvnw clean package -DskipTests"
-    startCommand: "java -jar target/*.jar"
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/*.jar
 
     envVars:
-      - key: SPRING_PROFILES_ACTIVE
-        value: prod
       - key: MYSQL_URL
-        value: "jdbc:mysql://scrapsaildb-scrapsaildb.e.aivencloud.com:22902/defaultdb?sslMode=REQUIRED"
+        sync: false
       - key: DB_USERNAME
-        value: "avnadmin"
+        sync: false
       - key: DB_PASSWORD
-        value: "AVNS_q3bA1ATbxyymPpRXPIY"
-      - key: JAVA_VERSION
-        value: "17"
+        sync: false
