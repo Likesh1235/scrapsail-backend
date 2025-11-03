@@ -21,7 +21,7 @@ RUN ./mvnw clean package -DskipTests
 # Expose port (Render will set PORT env var)
 EXPOSE 8080
 
-# Environment variables are passed from Render automatically
-# Run the application
-ENTRYPOINT ["java", "-jar", "target/scrapsail-backend-0.0.1-SNAPSHOT.jar"]
+# Use shell form for ENTRYPOINT to ensure environment variables are available
+# This ensures Render's env vars are properly passed through
+ENTRYPOINT exec java -jar target/scrapsail-backend-0.0.1-SNAPSHOT.jar
 
