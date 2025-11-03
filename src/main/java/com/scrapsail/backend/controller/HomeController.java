@@ -87,6 +87,14 @@ public class HomeController {
     @GetMapping("/test-db")
     public ResponseEntity<Map<String, Object>> testDatabase() {
         Map<String, Object> response = new HashMap<>();
+        
+        if (userRepository == null) {
+            response.put("success", false);
+            response.put("error", "Database repository not available");
+            response.put("message", "Database is not configured");
+            return ResponseEntity.ok(response);
+        }
+        
         try {
             // Test 1: Count users
             long userCount = userRepository.count();
