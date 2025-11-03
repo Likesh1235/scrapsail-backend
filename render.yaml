@@ -3,14 +3,20 @@ services:
     name: scrapsail-backend
     env: java
     plan: free
+    region: singapore
 
     buildCommand: ./mvnw clean package -DskipTests
     startCommand: java -jar target/*.jar
+    healthCheckPath: /ready
 
     envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
       - key: MYSQL_URL
         sync: false
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
         sync: false
+      - key: PORT
+        value: 8080

@@ -49,6 +49,31 @@ public class HomeController {
     }
 
     /**
+     * Readiness probe endpoint - checks database connectivity.
+     * Returns 200 if DB is accessible, 503 if not.
+     * Used by Render for health checks.
+     */
+    @GetMapping("/ready")
+    public ResponseEntity<Map<String, Object>> ready() {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // Test database connection by counting users
+            userRepository.count(); // Test DB connection
+            response.put("status", "ready");
+            response.put("database", "connected");
+            response.put("timestamp", System.currentTimeMillis());
+            response.put("message", "Backend is ready and database is accessible");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("status", "not ready");
+            response.put("database", "disconnected");
+            response.put("error", e.getMessage());
+            response.put("timestamp", System.currentTimeMillis());
+            return ResponseEntity.status(503).body(response);
+        }
+    }
+
+    /**
      * Test database connection and operations
      */
     @GetMapping("/test-db")

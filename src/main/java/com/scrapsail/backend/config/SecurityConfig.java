@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/users/login", "/api/users/register").permitAll()
                 .requestMatchers("/api/otp/**").permitAll()
                 .requestMatchers("/api/test").permitAll()
-                .requestMatchers("/health").permitAll()
+                .requestMatchers("/health", "/ready").permitAll()
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/**").permitAll()

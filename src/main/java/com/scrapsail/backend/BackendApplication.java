@@ -1,12 +1,39 @@
 package com.scrapsail.backend;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 public class BackendApplication {
+
+    private static final Logger logger = LoggerFactory.getLogger(BackendApplication.class);
+    private final Environment environment;
+
+    public BackendApplication(Environment environment) {
+        this.environment = environment;
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(BackendApplication.class, args);
-        System.out.println("🚀 ScrapSail Backend Running Successfully...");
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void onApplicationReady() {
+        String port = environment.getProperty("server.port", "8080");
+        String profile = environment.getProperty("spring.profiles.active", "default");
+        
+        logger.info("╔════════════════════════════════════════════════════════════╗");
+        logger.info("║  🚀 ScrapSail Backend Started Successfully                ║");
+        logger.info("╠════════════════════════════════════════════════════════════╣");
+        logger.info("║  Server: Running on port {}                                ║", port);
+        logger.info("║  Profile: {}                                               ║", profile);
+        logger.info("║  Health:  http://localhost:{}/health                       ║", port);
+        logger.info("║  Ready:   http://localhost:{}/ready                        ║", port);
+        logger.info("╚════════════════════════════════════════════════════════════╝");
     }
 }
