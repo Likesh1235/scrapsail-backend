@@ -27,15 +27,14 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/health", "/ready", "/").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/users/login", "/api/users/register").permitAll()
                 .requestMatchers("/api/otp/**").permitAll()
                 .requestMatchers("/api/test").permitAll()
-                .requestMatchers("/health", "/ready").permitAll()
-                .requestMatchers("/").permitAll()
                 .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/**").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
             );
         
         return http.build();
