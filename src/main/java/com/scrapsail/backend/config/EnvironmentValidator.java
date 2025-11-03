@@ -28,49 +28,49 @@ public class EnvironmentValidator {
     public void validateEnvironment() {
         logger.info("Validating environment variables...");
 
-        boolean hasErrors = false;
-        StringBuilder errors = new StringBuilder("\n❌ MISSING REQUIRED ENVIRONMENT VARIABLES:\n");
+        boolean hasWarnings = false;
+        StringBuilder warnings = new StringBuilder("\n⚠️  MISSING ENVIRONMENT VARIABLES (app will start but DB may not work):\n");
 
         // Check MYSQL_URL
         if (mysqlUrl == null || mysqlUrl.isEmpty() || mysqlUrl.contains("${")) {
-            errors.append("  - MYSQL_URL is missing or not set\n");
-            hasErrors = true;
+            warnings.append("  - MYSQL_URL is missing or not set\n");
+            hasWarnings = true;
         } else {
             logger.info("✅ MYSQL_URL is set");
         }
 
         // Check DB_USERNAME
         if (dbUsername == null || dbUsername.isEmpty() || dbUsername.contains("${")) {
-            errors.append("  - DB_USERNAME is missing or not set\n");
-            hasErrors = true;
+            warnings.append("  - DB_USERNAME is missing or not set\n");
+            hasWarnings = true;
         } else {
             logger.info("✅ DB_USERNAME is set");
         }
 
         // Check DB_PASSWORD
         if (dbPassword == null || dbPassword.isEmpty() || dbPassword.contains("${")) {
-            errors.append("  - DB_PASSWORD is missing or not set\n");
-            hasErrors = true;
+            warnings.append("  - DB_PASSWORD is missing or not set\n");
+            hasWarnings = true;
         } else {
             logger.info("✅ DB_PASSWORD is set");
         }
 
-        if (hasErrors) {
-            errors.append("\n📝 Please set these in Render Dashboard:\n");
-            errors.append("  Render → Settings → Environment Variables\n");
-            errors.append("\nRequired variables:\n");
-            errors.append("  - MYSQL_URL\n");
-            errors.append("  - DB_USERNAME\n");
-            errors.append("  - DB_PASSWORD\n");
-            errors.append("  - SPRING_PROFILES_ACTIVE=prod\n");
-            errors.append("  - PORT=8080\n");
+        if (hasWarnings) {
+            warnings.append("\n📝 Please set these in Railway Dashboard:\n");
+            warnings.append("  Railway → Settings → Variables\n");
+            warnings.append("\nRequired variables:\n");
+            warnings.append("  - MYSQL_URL\n");
+            warnings.append("  - DB_USERNAME\n");
+            warnings.append("  - DB_PASSWORD\n");
+            warnings.append("  - SPRING_PROFILES_ACTIVE=prod\n");
+            warnings.append("\n⚠️  App will start but database connection will fail.\n");
             
-            logger.error(errors.toString());
-            throw new IllegalStateException("Application cannot start: missing required environment variables. " +
-                    "Check logs above for details.");
+            logger.warn(warnings.toString());
+            // Don't throw exception - let app start so health checks can work
+            logger.warn("Application will start but database features may not work.");
+        } else {
+            logger.info("✅ All required environment variables are set");
         }
-
-        logger.info("✅ All required environment variables are set");
     }
 }
 
