@@ -13,17 +13,21 @@ import org.springframework.stereotype.Component;
 @Component  // ENABLED: Auto-creates admin and collector on startup
 public class DataInitializer implements CommandLineRunner {
 
-    @Autowired
+    @Autowired(required = false)
     private UserRepository userRepository;
 
-    @Autowired
+    @Autowired(required = false)
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
+    @Autowired(required = false)
     private WalletRepository walletRepository;
 
     @Override
     public void run(String... args) throws Exception {
+        // Don't block startup if repositories are not available (e.g., DB not connected)
+        if (userRepository == null || passwordEncoder == null || walletRepository == null) {
+            return; // Skip initialization if DB not available
+        } {
         System.out.println("🔄 DataInitializer: Starting user initialization...");
         
         try {
