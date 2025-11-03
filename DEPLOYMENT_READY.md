@@ -81,13 +81,20 @@ curl https://your-service-name.onrender.com/api/auth/login
 - **Region:** Singapore
 - **Plan:** Free
 
-### Environment Variables (Auto-Configured via render.yaml)
+### Environment Variables
+Configure in Render Dashboard after creating the service:
+
+**Via render.yaml (auto-configured):**
 - `SPRING_PROFILES_ACTIVE=prod`
 - `MYSQL_URL=jdbc:mysql://scrapsaildb-scrapsaildb.e.aivencloud.com:22902/defaultdb?sslMode=REQUIRED`
 - `DB_USERNAME=avnadmin`
-- `DB_PASSWORD=AVNS_q3bA1ATbxyymPpRXPIY`
 - `SERVER_PORT=8080`
 - `PORT` (automatically set by Render)
+
+**⚠️ REQUIRED - Set manually in Render Dashboard:**
+- `DB_PASSWORD=AVNS_q3bA1ATbxyymPpRXPIY`
+
+*(Password is excluded from render.yaml for security - set it manually in Render's environment variables)*
 
 ### Database
 - **Type:** Aiven MySQL
