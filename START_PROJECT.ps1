@@ -59,12 +59,12 @@ if ($port3000) {
 }
 Write-Host "   ✅ Port 3000 is available for frontend" -ForegroundColor Green
 
-# Start Backend
+# Start Backend (using local profile for localhost MySQL)
 Write-Host "[3/5] Starting Backend..." -ForegroundColor Yellow
 $backendWindow = Start-Process powershell -ArgumentList @(
     "-NoExit",
     "-Command",
-    "cd '$backendDir'; Write-Host '=== BACKEND SERVER ===' -ForegroundColor Cyan; mvn spring-boot:run"
+    "cd '$backendDir'; `$env:SPRING_PROFILES_ACTIVE='local'; Write-Host '=== BACKEND SERVER (Local Profile) ===' -ForegroundColor Cyan; Write-Host 'Using local MySQL database (localhost:3306/scrapsail)' -ForegroundColor Green; mvn spring-boot:run"
 ) -WindowStyle Normal -PassThru
 
 Write-Host "   ✅ Backend starting (PID: $($backendWindow.Id))" -ForegroundColor Green

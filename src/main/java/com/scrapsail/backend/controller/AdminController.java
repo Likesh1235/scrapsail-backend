@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.lang.NonNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -123,7 +124,7 @@ public class AdminController {
      */
     @PostMapping("/approve-order/{orderId}")
     public ResponseEntity<Map<String, Object>> approveOrder(
-            @PathVariable Long orderId,
+            @PathVariable @NonNull Long orderId,
             @RequestBody Map<String, String> request) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -209,7 +210,7 @@ public class AdminController {
      */
     @PostMapping("/reject-order/{orderId}")
     public ResponseEntity<Map<String, Object>> rejectOrder(
-            @PathVariable Long orderId,
+            @PathVariable @NonNull Long orderId,
             @RequestBody Map<String, String> request) {
         Map<String, Object> response = new HashMap<>();
         try {

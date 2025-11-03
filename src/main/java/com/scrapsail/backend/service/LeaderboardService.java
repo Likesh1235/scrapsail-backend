@@ -7,6 +7,7 @@ import com.scrapsail.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,7 @@ public class LeaderboardService {
     /**
      * Update or create leaderboard entry for a user
      */
-    public void updateLeaderboard(Long userId) {
+    public void updateLeaderboard(@NonNull Long userId) {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {
             return;
