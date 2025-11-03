@@ -8,7 +8,9 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+    // Allow app to start even if datasource is not available
+})
 public class BackendApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(BackendApplication.class);
