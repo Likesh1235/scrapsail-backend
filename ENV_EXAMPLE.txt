@@ -1,0 +1,44 @@
+# ============================================
+# ScrapSail Environment Variables
+# ============================================
+# Copy these and set as environment variables before running
+# DO NOT commit actual values to version control!
+
+# ============================================
+# Database Configuration
+# ============================================
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=scrapsail
+DB_USERNAME=root
+DB_PASSWORD=your_database_password_here
+
+# ============================================
+# Email Configuration (Gmail SMTP)
+# ============================================
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your_email@gmail.com
+MAIL_PASSWORD=your_app_password_here
+
+# ============================================
+# Logging Configuration
+# ============================================
+# Options: DEBUG, INFO, WARN, ERROR
+LOG_LEVEL=INFO
+HIBERNATE_SQL_LOG=WARN
+HIBERNATE_BINDER_LOG=WARN
+
+# ============================================
+# Error Handling
+# ============================================
+# Options: always, on_param, never
+INCLUDE_STACKTRACE=never
+INCLUDE_ERROR_MESSAGE=on_param
+INCLUDE_BINDING_ERRORS=on_param
+
+# ============================================
+# Server Configuration (Optional)
+# ============================================
+SERVER_PORT=8080
+
