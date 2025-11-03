@@ -1,11 +1,12 @@
 services:
   - type: web
     name: scrapsail-backend
+    env: java
     runtime: java17
     plan: free
     region: singapore
-    buildCommand: ./mvnw clean package -DskipTests
-    startCommand: java -jar target/*.jar
+    buildCommand: "./mvnw clean package -DskipTests"
+    startCommand: "java -jar target/*.jar"
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -14,7 +15,9 @@ services:
       - key: DB_USERNAME
         value: avnadmin
       - key: DB_PASSWORD
-        sync: false
+        value: AVNS_q3bA1ATbxyymPpRXPIY
       - key: SERVER_PORT
         value: 8080
-    branch: main
+      - key: PORT
+        value: 8080
+    branch: clean-main
