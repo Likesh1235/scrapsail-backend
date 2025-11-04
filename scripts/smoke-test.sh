@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Smoke test script for ScrapSail Backend
-# Tests health endpoints and verifies deployment
+# Tests health endpoints and verifies local development setup
 
 set -e
 
@@ -104,7 +104,7 @@ echo "✅ Health endpoint: Working"
 echo "✅ Readiness endpoint: $READY_STATUS"
 echo "✅ Root endpoint: Working"
 echo ""
-echo "🚀 Backend is deployed and responding correctly!"
+echo "🚀 Backend is running and responding correctly!"
 
 
 

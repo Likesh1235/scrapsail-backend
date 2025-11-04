@@ -28,16 +28,13 @@ public class BackendApplication {
     public void onApplicationReady() {
         String port = environment.getProperty("server.port", "8080");
         String profile = environment.getProperty("spring.profiles.active", "default");
-        String railwayUrl = environment.getProperty("RAILWAY_PUBLIC_DOMAIN", "");
         
         logger.info("╔════════════════════════════════════════════════════════════╗");
         logger.info("║  🚀 ScrapSail Backend Started Successfully                ║");
         logger.info("╠════════════════════════════════════════════════════════════╣");
         logger.info("║  Server: Running on port {}                                ║", port);
         logger.info("║  Profile: {}                                               ║", profile);
-        if (!railwayUrl.isEmpty()) {
-            logger.info("║  URL:     https://{}                                ║", railwayUrl);
-        }
+        logger.info("║  URL:     http://localhost:{}                              ║", port);
         logger.info("║  Health:  /health                                          ║");
         logger.info("║  Ready:   /ready                                           ║");
         logger.info("║  Root:   /                                                ║");
