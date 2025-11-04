@@ -1,140 +1,212 @@
-# ScrapSail Backend
+# 🚢 ScrapSail - Smart Waste Management System
 
-Spring Boot backend application for ScrapSail - a scrap management and recycling platform.
+## 📋 Project Overview
+
+ScrapSail is a full-stack waste management application with:
+- **Frontend:** React.js (localhost:3000)
+- **Backend:** Spring Boot (localhost:8080)
+- **Database:** MySQL (localhost:3306)
+
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Java 17+
-- Maven 3.6+
 - MySQL 8.0+
+- Node.js 16+
+- Maven (included via `mvnw`)
 
-### Starting the Backend
+---
 
-1. **Ensure MySQL is running:**
-   ```powershell
-   Start-Service MySQL80
-   ```
+## 🗄️ Step 1: Setup MySQL
 
-2. **Start the backend:**
-   ```powershell
-   mvn spring-boot:run
-   ```
+### Install MySQL
+1. Download from: https://dev.mysql.com/downloads/mysql/
+2. Install and start MySQL service
+3. Note your MySQL root password (or leave empty)
 
-   Or use the integrated startup script:
-   ```powershell
-   .\START_PROJECT.ps1
-   ```
-   This will start both backend and frontend automatically.
+### Create Database (Optional)
+The app will auto-create the database, but you can create it manually:
 
-3. **Verify backend is running:**
-   - Health check: http://localhost:8080/health
-   - Should return: `{"status":"UP"}`
+```bash
+mysql -u root -p
+CREATE DATABASE scrapsail;
+exit
+```
 
-## 🔧 Configuration
+---
 
-### Database Configuration
-Edit `src/main/resources/application.properties`:
+## 🔧 Step 2: Configure Backend
+
+### Database Password
+If your MySQL root password is not empty, update `application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/scrapsail
-spring.datasource.username=root
-spring.datasource.password=YOUR_PASSWORD
+spring.datasource.password=${DB_PASSWORD:your_password_here}
 ```
 
-### Email Configuration (Optional)
-To enable email sending, configure Gmail SMTP in `application.properties`:
+Or set environment variable:
+```bash
+# Windows PowerShell
+$env:DB_PASSWORD="your_password"
 
-```properties
-spring.mail.username=your-email@gmail.com
-spring.mail.password=YOUR_APP_PASSWORD
+# Linux/Mac
+export DB_PASSWORD="your_password"
 ```
 
-## 📋 Default Credentials
+---
 
-After backend starts, these accounts are automatically created:
+## 🚀 Step 3: Start Backend
 
-- **Admin:**
-  - Email: `admin@scrapsail.com`
-  - Password: `admin123`
-
-- **Collector:**
-  - Email: `collector@scrapsail.com`
-  - Password: `collector123`
-
-## 🔌 API Endpoints
-
-- **Health:** `GET /health`
-- **Login:** `POST /api/auth/login`
-- **Admin Login:** `POST /api/auth/admin-login`
-- **Collector Login:** `POST /api/auth/collector-login`
-- **Register:** `POST /api/auth/register`
-- **OTP Send:** `POST /api/otp/send`
-- **OTP Verify:** `POST /api/otp/verify`
-
-## 🧪 Testing
-
-Run tests:
-```powershell
-mvn test
+### Navigate to Backend
+```bash
+cd scrapsail-backend
 ```
 
-## 📦 Building
+### Start Backend Server
 
-Build JAR file:
-```powershell
-mvn clean package
+**Windows:**
+```bash
+.\mvnw.cmd spring-boot:run
 ```
 
-Run JAR:
-```powershell
-java -jar target/scrapsail-backend-0.0.1-SNAPSHOT.jar
+**Linux/Mac:**
+```bash
+./mvnw spring-boot:run
 ```
 
-## 🌐 Port Configuration
-
-Default port: **8080**
-
-Change in `application.properties`:
-```properties
-server.port=8080
+**Or use PowerShell script (Windows):**
+```bash
+.\START_PROJECT.ps1
 ```
 
-## 🔒 CORS Configuration
+### Verify Backend
+Open: http://localhost:8080/health
 
-CORS is configured for these origins:
-- http://localhost:3000
-- http://localhost:3001
-- http://localhost:5173
-
-To add more, edit `src/main/java/com/scrapsail/backend/config/CorsConfig.java`
-
-## 📝 Project Structure
-
-```
-src/
-├── main/
-│   ├── java/com/scrapsail/backend/
-│   │   ├── config/          # Configuration (CORS, Security)
-│   │   ├── controller/      # REST Controllers
-│   │   ├── service/         # Business Logic
-│   │   ├── repository/      # Data Access
-│   │   ├── model/           # Entity Models
-│   │   └── util/            # Utilities (DataInitializer)
-│   └── resources/
-│       └── application.properties
-└── test/
-    └── java/                # Test classes
+**Expected:**
+```json
+{
+  "status": "UP",
+  "message": "ScrapSail Backend is healthy and running!"
+}
 ```
 
-## 🛠️ Technology Stack
+---
 
-- **Framework:** Spring Boot 3.3.4
-- **Database:** MySQL 8.0
-- **ORM:** JPA/Hibernate
-- **Security:** Spring Security with JWT
-- **Build Tool:** Maven
+## 🎨 Step 4: Start Frontend
 
-## 📞 Support
+### Navigate to Frontend
+```bash
+cd scrapsail-frontend-new
+```
 
-For issues or questions, check the backend console logs or test the health endpoint.
+### Install Dependencies (First Time)
+```bash
+npm install
+```
+
+### Start Frontend
+```bash
+npm start
+```
+
+Frontend will open automatically at: http://localhost:3000
+
+---
+
+## ✅ Default Login Credentials
+
+After first startup, these users are auto-created:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@scrapsail.com | admin123 |
+| Collector | collector@scrapsail.com | collector123 |
+| User | user@scrapsail.com | user123 |
+
+---
+
+## 📊 Application URLs
+
+- **Frontend:** http://localhost:3000
+- **Backend API:** http://localhost:8080
+- **Health Check:** http://localhost:8080/health
+- **API Info:** http://localhost:8080/
+
+---
+
+## 🛠️ Development
+
+### Backend
+- **Port:** 8080
+- **Database:** `scrapsail` database (auto-created)
+- **Schema:** Auto-updated by Hibernate
+- **Hot Reload:** Requires restart (or use Spring DevTools)
+
+### Frontend
+- **Port:** 3000
+- **Hot Reload:** Enabled (auto-refreshes on changes)
+- **API Base URL:** http://localhost:8080
+
+---
+
+## 📁 Project Structure
+
+```
+ScrapSail/
+├── scrapsail-backend/          # Spring Boot backend
+│   ├── src/main/java/          # Java source code
+│   ├── src/main/resources/     # Configuration files
+│   └── pom.xml                # Maven dependencies
+│
+└── scrapsail-frontend-new/     # React frontend
+    ├── src/                    # React source code
+    ├── public/                 # Static files
+    └── package.json           # Node dependencies
+```
+
+---
+
+## 🔧 Configuration Files
+
+### Backend
+- `application.properties` - Main configuration (localhost MySQL)
+- `application-local.properties` - Alternative local config
+- `application-prod.properties` - Alternative config
+
+### Frontend
+- `src/api.js` - API base URL (http://localhost:8080)
+- `src/config/api.js` - API endpoint configuration
+
+---
+
+## 🐛 Troubleshooting
+
+### MySQL Connection Failed
+- Check MySQL is running
+- Verify password in `application.properties`
+- Check MySQL port (default: 3306)
+
+### Port Already in Use
+- Stop other applications
+- Or change port in `application.properties`
+
+### Frontend Can't Connect
+- Verify backend is running on port 8080
+- Check browser console for errors
+- Verify CORS settings
+
+---
+
+## 📝 Notes
+
+- Database auto-creates on first run
+- Tables auto-created by Hibernate
+- Default users created by DataInitializer
+- All deployment configurations removed - localhost only
+
+---
+
+**See `LOCAL_SETUP.md` for detailed setup instructions!**
+
