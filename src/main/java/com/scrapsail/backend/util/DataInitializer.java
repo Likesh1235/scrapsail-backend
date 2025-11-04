@@ -33,6 +33,14 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("🔄 DataInitializer: Starting user initialization...");
         
         try {
+            // Test database connection first - if it fails, skip initialization
+            userRepository.count(); // This will throw if DB is not connected
+        } catch (Exception e) {
+            System.out.println("⚠️ DataInitializer: Database not connected - Skipping initialization: " + e.getMessage());
+            return; // Don't try to initialize if DB is not connected
+        }
+        
+        try {
             // Create default admin account if it doesn't exist
             if (!userRepository.existsByEmail("admin@scrapsail.com")) {
                 System.out.println("📝 Creating admin user...");
