@@ -15,6 +15,9 @@ public class EnvironmentValidator {
 
     private static final Logger logger = LoggerFactory.getLogger(EnvironmentValidator.class);
 
+    @Value("${SPRING_DATASOURCE_URL:}")
+    private String springDatasourceUrl;
+
     @Value("${DATABASE_URL:}")
     private String databaseUrl;
 
@@ -31,22 +34,27 @@ public class EnvironmentValidator {
         boolean hasWarnings = false;
         StringBuilder warnings = new StringBuilder("\n⚠️  MISSING ENVIRONMENT VARIABLES (app will start but DB may not work):\n");
 
-        // Check for Railway DATABASE_URL or MYSQL_URL
+        // Check for SPRING_DATASOURCE_URL (Aiven MySQL), Railway DATABASE_URL, or MYSQL_URL
+        boolean hasSpringDatasourceUrl = (springDatasourceUrl != null && !springDatasourceUrl.isEmpty() && !springDatasourceUrl.contains("${"));
         boolean hasDatabaseUrl = (databaseUrl != null && !databaseUrl.isEmpty() && !databaseUrl.contains("${"));
         boolean hasMysqlUrl = (mysqlUrl != null && !mysqlUrl.isEmpty() && !mysqlUrl.contains("${"));
         boolean hasDatasourceUrl = (datasourceUrl != null && !datasourceUrl.isEmpty() 
                 && !datasourceUrl.contains("${") && !datasourceUrl.contains("localhost:3306"));
 
-        if (hasDatabaseUrl) {
+        if (hasSpringDatasourceUrl) {
+            logger.info("✅ SPRING_DATASOURCE_URL is set (Aiven MySQL detected)");
+        } else if (hasDatabaseUrl) {
             logger.info("✅ DATABASE_URL is set (Railway MySQL service detected)");
         } else if (hasMysqlUrl) {
             logger.info("✅ MYSQL_URL is set");
         } else if (hasDatasourceUrl) {
             logger.info("✅ Database URL is configured");
         } else {
-            warnings.append("  - DATABASE_URL or MYSQL_URL is missing\n");
-            warnings.append("    💡 Add MySQL service in Railway: + New → Database → Add MySQL\n");
-            warnings.append("    Railway will automatically set DATABASE_URL\n");
+            warnings.append("  - Database connection URL is missing\n");
+            warnings.append("    Options:\n");
+            warnings.append("    1. Add MySQL service in Railway: + New → Database → Add MySQL\n");
+            warnings.append("    2. Set SPRING_DATASOURCE_URL (for Aiven MySQL)\n");
+            warnings.append("    3. Set MYSQL_URL (manual override)\n");
             hasWarnings = true;
         }
 

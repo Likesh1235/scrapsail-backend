@@ -18,6 +18,9 @@ import java.net.URISyntaxException;
 @Configuration
 public class RailwayDatabaseConfig {
 
+    @Value("${SPRING_DATASOURCE_URL:}")
+    private String springDatasourceUrl;
+
     @Value("${DATABASE_URL:}")
     private String databaseUrl;
 
@@ -30,10 +33,14 @@ public class RailwayDatabaseConfig {
     public DataSourceProperties dataSourceProperties() {
         DataSourceProperties properties = new DataSourceProperties();
         
-        // Priority: MYSQL_URL > DATABASE_URL > default from application.properties
+        // Priority: SPRING_DATASOURCE_URL > MYSQL_URL > DATABASE_URL > default from application.properties
+        // SPRING_DATASOURCE_URL is already in JDBC format, use as-is
         String jdbcUrl = null;
         
-        if (mysqlUrl != null && !mysqlUrl.isEmpty()) {
+        if (springDatasourceUrl != null && !springDatasourceUrl.isEmpty()) {
+            // SPRING_DATASOURCE_URL is already in JDBC format (e.g., from Aiven)
+            jdbcUrl = springDatasourceUrl;
+        } else if (mysqlUrl != null && !mysqlUrl.isEmpty()) {
             // If MYSQL_URL is set, use it (convert if needed)
             jdbcUrl = convertToJdbcUrl(mysqlUrl);
         } else if (databaseUrl != null && !databaseUrl.isEmpty()) {
