@@ -143,3 +143,5 @@ After fix, Railway logs should show:
 
 **The most critical fix: SET `SPRING_PROFILES_ACTIVE=prod` in Railway Variables!** 🚨
 
+
+

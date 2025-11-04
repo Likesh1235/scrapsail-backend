@@ -15,14 +15,14 @@ public class EnvironmentValidator {
 
     private static final Logger logger = LoggerFactory.getLogger(EnvironmentValidator.class);
 
-    @Value("${spring.datasource.url:}")
+    @Value("${DATABASE_URL:}")
+    private String databaseUrl;
+
+    @Value("${MYSQL_URL:}")
     private String mysqlUrl;
 
-    @Value("${spring.datasource.username:}")
-    private String dbUsername;
-
-    @Value("${spring.datasource.password:}")
-    private String dbPassword;
+    @Value("${spring.datasource.url:}")
+    private String datasourceUrl;
 
     @PostConstruct
     public void validateEnvironment() {
@@ -31,45 +31,38 @@ public class EnvironmentValidator {
         boolean hasWarnings = false;
         StringBuilder warnings = new StringBuilder("\n⚠️  MISSING ENVIRONMENT VARIABLES (app will start but DB may not work):\n");
 
-        // Check MYSQL_URL
-        if (mysqlUrl == null || mysqlUrl.isEmpty() || mysqlUrl.contains("${")) {
-            warnings.append("  - MYSQL_URL is missing or not set\n");
-            hasWarnings = true;
-        } else {
+        // Check for Railway DATABASE_URL or MYSQL_URL
+        boolean hasDatabaseUrl = (databaseUrl != null && !databaseUrl.isEmpty() && !databaseUrl.contains("${"));
+        boolean hasMysqlUrl = (mysqlUrl != null && !mysqlUrl.isEmpty() && !mysqlUrl.contains("${"));
+        boolean hasDatasourceUrl = (datasourceUrl != null && !datasourceUrl.isEmpty() 
+                && !datasourceUrl.contains("${") && !datasourceUrl.contains("localhost:3306"));
+
+        if (hasDatabaseUrl) {
+            logger.info("✅ DATABASE_URL is set (Railway MySQL service detected)");
+        } else if (hasMysqlUrl) {
             logger.info("✅ MYSQL_URL is set");
-        }
-
-        // Check DB_USERNAME
-        if (dbUsername == null || dbUsername.isEmpty() || dbUsername.contains("${")) {
-            warnings.append("  - DB_USERNAME is missing or not set\n");
-            hasWarnings = true;
+        } else if (hasDatasourceUrl) {
+            logger.info("✅ Database URL is configured");
         } else {
-            logger.info("✅ DB_USERNAME is set");
-        }
-
-        // Check DB_PASSWORD
-        if (dbPassword == null || dbPassword.isEmpty() || dbPassword.contains("${")) {
-            warnings.append("  - DB_PASSWORD is missing or not set\n");
+            warnings.append("  - DATABASE_URL or MYSQL_URL is missing\n");
+            warnings.append("    💡 Add MySQL service in Railway: + New → Database → Add MySQL\n");
+            warnings.append("    Railway will automatically set DATABASE_URL\n");
             hasWarnings = true;
-        } else {
-            logger.info("✅ DB_PASSWORD is set");
         }
 
         if (hasWarnings) {
-            warnings.append("\n📝 Please set these in Railway Dashboard:\n");
-            warnings.append("  Railway → Settings → Variables\n");
-            warnings.append("\nRequired variables:\n");
-            warnings.append("  - MYSQL_URL\n");
-            warnings.append("  - DB_USERNAME\n");
-            warnings.append("  - DB_PASSWORD\n");
-            warnings.append("  - SPRING_PROFILES_ACTIVE=prod\n");
+            warnings.append("\n📝 Railway Setup Instructions:\n");
+            warnings.append("  1. Go to Railway Dashboard → Your Project\n");
+            warnings.append("  2. Click '+ New' → 'Database' → 'Add MySQL'\n");
+            warnings.append("  3. Railway automatically sets DATABASE_URL\n");
+            warnings.append("  4. Optionally set SPRING_PROFILES_ACTIVE=prod\n");
             warnings.append("\n⚠️  App will start but database connection will fail.\n");
             
             logger.warn(warnings.toString());
             // Don't throw exception - let app start so health checks can work
             logger.warn("Application will start but database features may not work.");
         } else {
-            logger.info("✅ All required environment variables are set");
+            logger.info("✅ Database connection configured");
         }
     }
 }

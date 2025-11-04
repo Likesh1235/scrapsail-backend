@@ -3,7 +3,6 @@ package com.scrapsail.backend.config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -17,12 +16,8 @@ import javax.sql.DataSource;
 @Configuration
 public class LazyDataSourceConfig {
 
-    @Bean
-    @Primary
-    @ConfigurationProperties("spring.datasource")
-    public DataSourceProperties dataSourceProperties() {
-        return new DataSourceProperties();
-    }
+    // DataSourceProperties is provided by RailwayDatabaseConfig
+    // No need to create it here - RailwayDatabaseConfig handles URL conversion
 
     @Bean
     @Primary
@@ -44,4 +39,6 @@ public class LazyDataSourceConfig {
         return new HikariDataSource(config);
     }
 }
+
+
 
