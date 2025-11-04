@@ -47,8 +47,13 @@ public class OrderService {
         Optional<User> user = userRepository.findById(userId);
         User foundUser = user.orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
+        // Calculate the next order number for this user
+        Integer maxOrderNumber = scrapOrderRepository.findMaxUserOrderNumberByUserId(userId);
+        Integer nextOrderNumber = (maxOrderNumber == null ? 0 : maxOrderNumber) + 1;
+
         ScrapOrder order = new ScrapOrder();
         order.setUser(foundUser);
+        order.setUserOrderNumber(nextOrderNumber);
         order.setItemType(itemType);
         order.setWeight(weight);
         order.setStatus("PENDING");
@@ -146,5 +151,16 @@ public class OrderService {
             throw new IllegalArgumentException("ScrapOrder cannot be null");
         }
         return scrapOrderRepository.save(order);
+    }
+
+    /**
+     * Get the maximum order number for a user
+     */
+    public Integer getMaxUserOrderNumber(Long userId) {
+        if (userId == null) {
+            return 0;
+        }
+        Integer maxOrderNumber = scrapOrderRepository.findMaxUserOrderNumberByUserId(userId);
+        return maxOrderNumber == null ? 0 : maxOrderNumber;
     }
 }

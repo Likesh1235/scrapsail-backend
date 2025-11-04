@@ -245,6 +245,7 @@ public class AdminController {
     private Map<String, Object> buildOrderMap(ScrapOrder order) {
         Map<String, Object> orderMap = new HashMap<>();
         orderMap.put("id", order.getId());
+        orderMap.put("userOrderNumber", order.getUserOrderNumber() != null ? order.getUserOrderNumber() : order.getId()); // Use userOrderNumber if available, fallback to id
         orderMap.put("itemType", order.getItemType());
         orderMap.put("weight", order.getWeight());
         orderMap.put("status", order.getStatus());
@@ -438,7 +439,8 @@ public class AdminController {
             emailBody.append("A new pickup request has been approved and assigned to you.\n\n");
             emailBody.append("ORDER DETAILS:\n");
             emailBody.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
-            emailBody.append("Order ID: #").append(order.getId()).append("\n");
+            Integer orderNumber = order.getUserOrderNumber() != null ? order.getUserOrderNumber() : order.getId().intValue();
+            emailBody.append("Order ID: #").append(orderNumber).append("\n");
             emailBody.append("Waste Type: ").append(order.getItemType() != null ? order.getItemType() : "N/A").append("\n");
             emailBody.append("Weight: ").append(order.getWeight() != null ? order.getWeight() + " kg" : "N/A").append("\n");
             emailBody.append("Pickup Address: ").append(order.getAddress() != null ? order.getAddress() : "N/A").append("\n\n");
@@ -468,7 +470,7 @@ public class AdminController {
             emailBody.append("Best regards,\n");
             emailBody.append("ScrapSail Admin Team");
             
-            String subject = "New Pickup Request Approved - Order #" + order.getId();
+            String subject = "New Pickup Request Approved - Order #" + orderNumber;
             
             emailService.sendPlainEmail(collectorEmail, subject, emailBody.toString());
             System.out.println("✅ Order details sent to collector: " + collectorEmail);

@@ -107,6 +107,11 @@ public class OrderController {
                     User user = userOpt.get();
                     order.setUser(user);
                     
+                    // Calculate the next order number for this user
+                    Integer maxOrderNumber = orderService.getMaxUserOrderNumber(user.getId());
+                    Integer nextOrderNumber = (maxOrderNumber == null ? 0 : maxOrderNumber) + 1;
+                    order.setUserOrderNumber(nextOrderNumber);
+                    
                     // Update user record with pickup form details (for regular users only)
                     if (user.getRole() == com.scrapsail.backend.model.Role.user) {
                         // Update phone if provided in pickup form

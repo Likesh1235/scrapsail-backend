@@ -42,6 +42,7 @@ public class CollectorController {
     private Map<String, Object> buildOrderMap(ScrapOrder order) {
         Map<String, Object> orderMap = new HashMap<>();
         orderMap.put("id", order.getId());
+        orderMap.put("userOrderNumber", order.getUserOrderNumber() != null ? order.getUserOrderNumber() : order.getId()); // Use userOrderNumber if available, fallback to id
         orderMap.put("itemType", order.getItemType());
         orderMap.put("weight", order.getWeight());
         orderMap.put("status", order.getStatus());
@@ -245,6 +246,36 @@ public class CollectorController {
                 // Get all APPROVED orders (assignable to any collector)
                 assignedOrders = orderService.getOrdersByStatus("APPROVED");
                 System.out.println("✅ Found " + assignedOrders.size() + " APPROVED orders (no specific collector)");
+            }
+            
+            // Ensure all orders have userOrderNumber set (group by user and assign sequential numbers)
+            // Group orders by user
+            Map<Long, List<ScrapOrder>> ordersByUser = assignedOrders.stream()
+                .filter(order -> order.getUser() != null)
+                .collect(java.util.stream.Collectors.groupingBy(order -> order.getUser().getId()));
+            
+            // For each user, ensure their orders have userOrderNumber set
+            for (Map.Entry<Long, List<ScrapOrder>> entry : ordersByUser.entrySet()) {
+                Long userId = entry.getKey();
+                List<ScrapOrder> userOrders = entry.getValue();
+                
+                // Sort by creation date (oldest first)
+                userOrders.sort((o1, o2) -> {
+                    if (o1.getCreatedAt() == null && o2.getCreatedAt() == null) return 0;
+                    if (o1.getCreatedAt() == null) return 1;
+                    if (o2.getCreatedAt() == null) return -1;
+                    return o1.getCreatedAt().compareTo(o2.getCreatedAt());
+                });
+                
+                // Assign userOrderNumber for orders that don't have it
+                for (int i = 0; i < userOrders.size(); i++) {
+                    ScrapOrder order = userOrders.get(i);
+                    if (order.getUserOrderNumber() == null) {
+                        order.setUserOrderNumber(i + 1);
+                        orderService.save(order);
+                        System.out.println("✅ Set userOrderNumber=" + (i + 1) + " for order ID=" + order.getId() + " (user ID=" + userId + ")");
+                    }
+                }
             }
             
             // Ensure all orders include GPS coordinates in response

@@ -45,7 +45,25 @@ public class UserController {
             List<ScrapOrder> userOrders = allOrders.stream()
                 .filter(order -> order.getUserEmail() != null && 
                                order.getUserEmail().equals(user.getEmail()))
+                .sorted((o1, o2) -> {
+                    // Sort by creation date (oldest first)
+                    if (o1.getCreatedAt() == null && o2.getCreatedAt() == null) return 0;
+                    if (o1.getCreatedAt() == null) return 1;
+                    if (o2.getCreatedAt() == null) return -1;
+                    return o1.getCreatedAt().compareTo(o2.getCreatedAt());
+                })
                 .collect(Collectors.toList());
+
+            // Ensure all orders have userOrderNumber set (for orders created before this feature)
+            for (int i = 0; i < userOrders.size(); i++) {
+                ScrapOrder order = userOrders.get(i);
+                if (order.getUserOrderNumber() == null) {
+                    // Set userOrderNumber based on position (1-indexed)
+                    order.setUserOrderNumber(i + 1);
+                    // Save the updated order to database
+                    orderService.save(order);
+                }
+            }
 
             response.put("success", true);
             response.put("orders", userOrders);
@@ -68,7 +86,25 @@ public class UserController {
             List<ScrapOrder> userOrders = allOrders.stream()
                 .filter(order -> order.getUserEmail() != null && 
                                order.getUserEmail().equalsIgnoreCase(email))
+                .sorted((o1, o2) -> {
+                    // Sort by creation date (oldest first)
+                    if (o1.getCreatedAt() == null && o2.getCreatedAt() == null) return 0;
+                    if (o1.getCreatedAt() == null) return 1;
+                    if (o2.getCreatedAt() == null) return -1;
+                    return o1.getCreatedAt().compareTo(o2.getCreatedAt());
+                })
                 .collect(Collectors.toList());
+
+            // Ensure all orders have userOrderNumber set (for orders created before this feature)
+            for (int i = 0; i < userOrders.size(); i++) {
+                ScrapOrder order = userOrders.get(i);
+                if (order.getUserOrderNumber() == null) {
+                    // Set userOrderNumber based on position (1-indexed)
+                    order.setUserOrderNumber(i + 1);
+                    // Save the updated order to database
+                    orderService.save(order);
+                }
+            }
 
             response.put("success", true);
             response.put("orders", userOrders);

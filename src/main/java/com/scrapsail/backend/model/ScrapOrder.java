@@ -20,6 +20,8 @@ public class ScrapOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Integer userOrderNumber; // Per-user order number (starts from 1 for each user)
+
     private String itemType;
     private Double weight;
     private String status;
@@ -51,6 +53,9 @@ public class ScrapOrder {
     // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public Integer getUserOrderNumber() { return userOrderNumber; }
+    public void setUserOrderNumber(Integer userOrderNumber) { this.userOrderNumber = userOrderNumber; }
 
     public String getItemType() { return itemType; }
     public void setItemType(String itemType) { this.itemType = itemType; }

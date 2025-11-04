@@ -7,6 +7,7 @@
 -- ==================================================
 
 CREATE DATABASE IF NOT EXISTS scrapsail;
+
 USE scrapsail;
 
 -- Disable foreign key checks temporarily to drop all tables
@@ -44,6 +45,7 @@ CREATE TABLE users (
 -- Create Scrap Orders Table (includes GPS coordinates and GPS link)
 CREATE TABLE scrap_orders (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_order_number INT DEFAULT NULL COMMENT 'Per-user order number (starts from 1 for each user)',
     item_type VARCHAR(255),
     weight DOUBLE,
     status VARCHAR(255),
@@ -61,7 +63,8 @@ CREATE TABLE scrap_orders (
     FOREIGN KEY (collector_id) REFERENCES users(id) ON DELETE SET NULL,
     INDEX idx_user_id (user_id),
     INDEX idx_collector_id (collector_id),
-    INDEX idx_status (status)
+    INDEX idx_status (status),
+    INDEX idx_user_order_number (user_id, user_order_number)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Create Carbon Wallet Table
@@ -128,3 +131,4 @@ SELECT * FROM pickup_requests ORDER BY pickup_date DESC;
 
 -- View all leaderboard entries
 SELECT * FROM leaderboard ORDER BY rank_position ASC;
+
