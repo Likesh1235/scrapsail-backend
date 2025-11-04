@@ -15,15 +15,6 @@ public class EnvironmentValidator {
 
     private static final Logger logger = LoggerFactory.getLogger(EnvironmentValidator.class);
 
-    @Value("${SPRING_DATASOURCE_URL:}")
-    private String springDatasourceUrl;
-
-    @Value("${DATABASE_URL:}")
-    private String databaseUrl;
-
-    @Value("${MYSQL_URL:}")
-    private String mysqlUrl;
-
     @Value("${spring.datasource.url:}")
     private String datasourceUrl;
 
@@ -31,47 +22,19 @@ public class EnvironmentValidator {
     public void validateEnvironment() {
         logger.info("Validating environment variables...");
 
-        boolean hasWarnings = false;
-        StringBuilder warnings = new StringBuilder("\n⚠️  MISSING ENVIRONMENT VARIABLES (app will start but DB may not work):\n");
-
-        // Check for SPRING_DATASOURCE_URL (Aiven MySQL), Railway DATABASE_URL, or MYSQL_URL
-        boolean hasSpringDatasourceUrl = (springDatasourceUrl != null && !springDatasourceUrl.isEmpty() && !springDatasourceUrl.contains("${"));
-        boolean hasDatabaseUrl = (databaseUrl != null && !databaseUrl.isEmpty() && !databaseUrl.contains("${"));
-        boolean hasMysqlUrl = (mysqlUrl != null && !mysqlUrl.isEmpty() && !mysqlUrl.contains("${"));
+        // Check if database URL is configured (defaults to localhost for local development)
         boolean hasDatasourceUrl = (datasourceUrl != null && !datasourceUrl.isEmpty() 
-                && !datasourceUrl.contains("${") && !datasourceUrl.contains("localhost:3306"));
+                && !datasourceUrl.contains("${"));
 
-        if (hasSpringDatasourceUrl) {
-            logger.info("✅ SPRING_DATASOURCE_URL is set (Aiven MySQL detected)");
-        } else if (hasDatabaseUrl) {
-            logger.info("✅ DATABASE_URL is set (Railway MySQL service detected)");
-        } else if (hasMysqlUrl) {
-            logger.info("✅ MYSQL_URL is set");
+        if (hasDatasourceUrl && datasourceUrl.contains("localhost:3306")) {
+            logger.info("✅ Local MySQL database configured (localhost:3306)");
         } else if (hasDatasourceUrl) {
-            logger.info("✅ Database URL is configured");
+            logger.info("✅ Database connection configured");
         } else {
-            warnings.append("  - Database connection URL is missing\n");
-            warnings.append("    Options:\n");
-            warnings.append("    1. Add MySQL service in Railway: + New → Database → Add MySQL\n");
-            warnings.append("    2. Set SPRING_DATASOURCE_URL (for Aiven MySQL)\n");
-            warnings.append("    3. Set MYSQL_URL (manual override)\n");
-            hasWarnings = true;
+            logger.warn("⚠️  Database URL not configured - using default localhost:3306");
         }
 
-        if (hasWarnings) {
-            warnings.append("\n📝 Railway Setup Instructions:\n");
-            warnings.append("  1. Go to Railway Dashboard → Your Project\n");
-            warnings.append("  2. Click '+ New' → 'Database' → 'Add MySQL'\n");
-            warnings.append("  3. Railway automatically sets DATABASE_URL\n");
-            warnings.append("  4. Optionally set SPRING_PROFILES_ACTIVE=prod\n");
-            warnings.append("\n⚠️  App will start but database connection will fail.\n");
-            
-            logger.warn(warnings.toString());
-            // Don't throw exception - let app start so health checks can work
-            logger.warn("Application will start but database features may not work.");
-        } else {
-            logger.info("✅ Database connection configured");
-        }
+        logger.info("✅ Environment validation completed");
     }
 }
 
