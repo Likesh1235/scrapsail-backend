@@ -51,7 +51,7 @@ public class HomeController {
     /**
      * Readiness probe endpoint - checks database connectivity.
      * Returns 200 if DB is accessible, 503 if not.
-     * Used by Render for health checks.
+     * Used by Railway for health checks.
      */
     @GetMapping("/ready")
     public ResponseEntity<Map<String, Object>> ready() {

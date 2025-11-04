@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 /**
  * Handles graceful shutdown on SIGTERM.
- * Closes database connections cleanly when Render stops the application.
+ * Closes database connections cleanly when Railway stops the application.
  */
 @Component
 public class GracefulShutdown implements ApplicationListener<ContextClosedEvent> {
